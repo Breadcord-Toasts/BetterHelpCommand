@@ -1,0 +1,9 @@
+manifest_version = 1
+
+[module]
+name = "Better Help"
+id = "better_help"
+description = "A module aiming to provide a fancier alternative to the default disocrd.py help command response."
+version = "0.0.1"
+license = "GNU GPLv3"
+authors = ["Fripe"]
