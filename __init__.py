@@ -95,4 +95,4 @@ class BetterHelp(ModuleCog):
 
 
 async def setup(bot: breadcord.Bot):
-    await bot.add_cog(BetterHelp("better_help"))
+    await bot.add_cog(BetterHelp("better_help_command"))

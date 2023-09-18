@@ -1,8 +1,8 @@
 manifest_version = 1
 
 [module]
-name = "Better Help"
-id = "better_help"
+name = "Better Help Command"
+id = "better_help_command"
 description = "A module aiming to provide a fancier alternative to the default disocrd.py help command response."
 version = "0.0.1"
 license = "GNU GPLv3"
