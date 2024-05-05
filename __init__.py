@@ -95,7 +95,7 @@ class HelpCommand(commands.MinimalHelpCommand):
         await self.send_pages()
 
     async def send_group_help(self, group: commands.Group[Any, ..., Any], /) -> None:
-        self.add_command_formatting(group)
+        self.add_command_formatting(group)  # type: ignore
 
         filtered = await self.filter_commands(group.commands, sort=self.sort_commands)
         if filtered:
@@ -121,7 +121,7 @@ class HelpCommand(commands.MinimalHelpCommand):
             color=discord.Colour.red(),
         ))
 
-    def add_command_formatting(self, command: commands.Command, /) -> None:
+    def add_command_formatting(self, command: commands.Command[Any, ..., Any], /) -> None:
         if command.description:
             self.paginator.add_line(
                 "\n".join(f"> {line}" for line in command.description.splitlines()),
@@ -141,6 +141,13 @@ class HelpCommand(commands.MinimalHelpCommand):
 
         if command.aliases:
             self.add_aliases_formatting(command.aliases)
+
+        for param in command.params.values():
+            self.paginator.add_line("\n".join((
+                f"### {param.name}",
+                f"- {param.kind.description}",
+                f"{param.description}",
+            )))
 
     def command_not_found(self, string: str, /) -> str:
         return (
