@@ -10,17 +10,26 @@ from breadcord.module import ModuleCog
 
 
 def command_bullet_point(command: commands.Command, /) -> str:
+    short_doc = command.short_doc
+    if not short_doc and command.description:
+        short_doc = command.description.split("\n", 1)[0]
+
+    short_doc_limit = 140
+    if len(short_doc) > short_doc_limit:
+        short_doc = short_doc[:short_doc_limit-3] + "..."
+
     return (
         f"- {command.qualified_name}"
-        + (f"\n  - {command.short_doc}" if command.short_doc else "")
+        + (f"\n  - {short_doc}" if short_doc else "")
     )
 
 
 class HelpCommand(commands.MinimalHelpCommand):
     def __init__(self) -> None:
         super().__init__()
+        self.no_category = "Core Commands"
 
-    async def send_pages(self):
+    async def send_pages(self) -> None:
         for page in self.paginator.pages:
             await self.get_destination().send(embed=discord.Embed(
                 description=page,
@@ -137,12 +146,14 @@ class HelpCommand(commands.MinimalHelpCommand):
                 self.paginator.add_line()
 
         signature = self.get_command_signature(command)
-        self.paginator.add_line(signature, empty=not command.aliases)
+        self.paginator.add_line(f"**Usage:** `{signature}`", empty=not command.aliases)
 
         if command.aliases:
             self.add_aliases_formatting(command.aliases)
 
         for param in command.params.values():
+            if not param.description:
+                continue
             self.paginator.add_line("\n".join((
                 f"### {param.name}",
                 f"- {param.kind.description}",
