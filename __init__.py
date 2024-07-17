@@ -51,7 +51,18 @@ class HelpCommand(commands.MinimalHelpCommand):
         if not cmds:
             return
         self.paginator.add_line(f"### {heading}")
-        self.paginator.add_line("\n".join(command_bullet_point(cmd) for cmd in cmds))
+        for cmd in cmds:
+            if isinstance(cmd, commands.Group):
+                bullet_point = f"- {cmd.qualified_name}"
+                for subcommand in cmd.commands:
+                    bullet_point += "\n" + "\n".join(
+                        " " * 2 + line.replace(f"- {cmd.qualified_name} ", "- ", 1)
+                        for line in command_bullet_point(subcommand).splitlines()
+                    )
+            else:
+                bullet_point = command_bullet_point(cmd)
+
+            self.paginator.add_line(bullet_point)
 
     async def send_bot_help(
         self,
