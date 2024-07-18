@@ -194,5 +194,5 @@ class BetterHelp(ModuleCog):
         self.bot.help_command = self.previous_help_command
 
 
-async def setup(bot: breadcord.Bot):
-    await bot.add_cog(BetterHelp("better_help_command"))
+async def setup(bot: breadcord.Bot, module: breadcord.module.Module) -> None:
+    await bot.add_cog(BetterHelp(module.id))
